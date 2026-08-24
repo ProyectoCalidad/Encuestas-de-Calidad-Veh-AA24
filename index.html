@@ -46,13 +46,14 @@
     margin-bottom:28px;
   }
   .brand{display:flex;align-items:center;gap:14px;}
-  .brand img{height:44px;display:block;}
-  .logo-cardinal-chip{
-    background:#161616;border-radius:9px;padding:8px 12px;
-    display:flex;align-items:center;height:44px;box-sizing:border-box;
+  .brand-logos{display:flex;align-items:center;gap:10px;}
+  .logo-frame{
+    width:118px;height:50px;border-radius:10px;border:1px solid var(--borde);
+    display:flex;align-items:center;justify-content:center;overflow:hidden;
+    background:var(--card);padding:8px;box-sizing:border-box;
   }
-  .logo-cardinal-chip img{height:100%;width:auto;}
-  .brand-logos{display:flex;align-items:center;gap:12px;}
+  .logo-frame img{max-width:100%;max-height:100%;object-fit:contain;display:block;}
+  .logo-frame.oscuro{background:#161616;border-color:#161616;}
   .brand h1{font-size:1.35rem;margin:0;font-weight:800;letter-spacing:-.01em;}
   .brand p{margin:2px 0 0;color:var(--texto-sec);font-size:.85rem;}
   .top-actions{display:flex;align-items:center;gap:14px;}
@@ -165,8 +166,8 @@
   <header class="top">
     <div class="brand">
       <div class="brand-logos">
-        <div class="logo-cardinal-chip"><img src="logo-cardinal.png" alt="Cardinal Assistance"></div>
-        <img src="logo-auxilio24.png" alt="Auxilio24">
+        <div class="logo-frame oscuro"><img src="logo-cardinal.png" alt="Cardinal Assistance"></div>
+        <div class="logo-frame"><img src="logo-auxilio24.png" alt="Auxilio24"></div>
       </div>
       <div>
         <h1>Panel de Satisfacción</h1>
@@ -329,7 +330,14 @@ function renderRankings(casos){
     const total = vals.length;
     const counts = {};
     vals.forEach(v=>counts[v]=(counts[v]||0)+1);
-    const entries = Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+    let entries = Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+    const MAX_ITEMS = 8;
+    if(entries.length > MAX_ITEMS){
+      const top = entries.slice(0, MAX_ITEMS);
+      const resto = entries.slice(MAX_ITEMS);
+      const sumaResto = resto.reduce((acc,[,n])=>acc+n, 0);
+      entries = [...top, ["Otros", sumaResto]];
+    }
     const card = document.createElement("div");
     card.className = "rank-card";
     let rows = "";
