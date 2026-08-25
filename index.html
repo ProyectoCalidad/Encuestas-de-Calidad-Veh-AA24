@@ -46,7 +46,7 @@
     margin-bottom:28px;
   }
   .brand{display:flex;align-items:center;gap:14px;}
-  .brand-logos{display:flex;align-items:center;gap:10px;}
+  .brand-logos{display:flex;align-items:center;gap:16px;}
   .logo-frame{
     width:118px;height:50px;border-radius:10px;border:1px solid var(--borde);
     display:flex;align-items:center;justify-content:center;overflow:hidden;
@@ -54,6 +54,8 @@
   }
   .logo-frame img{max-width:100%;max-height:100%;object-fit:contain;display:block;}
   .logo-frame.oscuro{background:#161616;border-color:#161616;}
+  .logo-flotante{height:42px;display:flex;align-items:center;}
+  .logo-flotante img{height:100%;width:auto;object-fit:contain;display:block;}
   .brand h1{font-size:1.35rem;margin:0;font-weight:800;letter-spacing:-.01em;}
   .brand p{margin:2px 0 0;color:var(--texto-sec);font-size:.85rem;}
   .top-actions{display:flex;align-items:center;gap:14px;}
@@ -119,8 +121,8 @@
   .rank-row{display:grid;grid-template-columns:1fr 46px;align-items:center;gap:10px;margin-bottom:9px;font-size:.82rem;}
   .rank-row .name{color:var(--texto);}
   .rank-row .name .n{color:var(--texto-sec);font-size:.72rem;margin-left:4px;}
-  .rank-track{grid-column:1/3;background:var(--bg);border-radius:6px;height:9px;overflow:hidden;margin-top:-4px;margin-bottom:2px;}
-  .rank-fill{height:100%;background:var(--naranja);border-radius:6px;}
+  .rank-track{grid-column:1/3;background:var(--bg);border-radius:6px;height:9px;overflow:hidden;margin-top:-4px;margin-bottom:2px;border:1px solid var(--borde);}
+  .rank-fill{height:100%;border-radius:6px;background:linear-gradient(90deg, var(--naranja) 0%, #FFB877 100%);}
   .rank-row .pct{text-align:right;font-weight:700;}
   .rank-empty{color:var(--texto-sec);font-size:.85rem;font-style:italic;}
   .rank-full{margin-top:16px;}
@@ -191,7 +193,7 @@
     <div class="brand">
       <div class="brand-logos">
         <div class="logo-frame oscuro"><img src="logo-cardinal.png" alt="Cardinal Assistance"></div>
-        <div class="logo-frame"><img src="logo-auxilio24.png" alt="Auxilio24"></div>
+        <div class="logo-flotante"><img id="logoAuxilio" src="logo-auxilio24-dark.png" alt="Auxilio24"></div>
       </div>
       <div>
         <h1>Panel de Satisfacción</h1>
@@ -226,7 +228,7 @@
   <h2 class="section-title">Indicadores clave</h2>
   <div class="kpi-grid" id="kpiGrid"></div>
 
-  <h2 class="section-title">Recomendación de los clientes</h2>
+  <h2 class="section-title">NPS</h2>
   <div class="nps-card" id="npsCard"></div>
 
   <h2 class="section-title">Detalle</h2>
@@ -347,7 +349,7 @@ function renderNps(casos){
 
   cont.innerHTML = total
     ? `<div class="nps-stack">${stackHtml}</div><div class="nps-legend">${legendHtml}</div>`
-    : `<div class="rank-empty">Sin datos de recomendación para el filtro seleccionado.</div>`;
+    : `<div class="rank-empty">Sin datos de NPS para el filtro seleccionado.</div>`;
 }
 
 function renderKpis(casos){
@@ -470,9 +472,11 @@ function escapeHtml(s){
 
 // Tema claro/oscuro (no persiste entre visitas, solo durante la sesión de navegación)
 const toggleBtn = document.getElementById("themeToggle");
+const logoAuxilio = document.getElementById("logoAuxilio");
 function aplicarTema(t){
   document.documentElement.setAttribute("data-theme", t);
   toggleBtn.textContent = t==="dark" ? "☀️" : "🌙";
+  if(logoAuxilio) logoAuxilio.src = t==="dark" ? "logo-auxilio24-dark.png" : "logo-auxilio24-light.png";
 }
 aplicarTema("dark");
 toggleBtn.addEventListener("click", ()=>{
