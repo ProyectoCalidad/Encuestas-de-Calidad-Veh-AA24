@@ -28,6 +28,7 @@ Columnas esperadas en la hoja "Reporte Metricas Encuestas" (o la primera hoja):
     Q  Problema
     R  Provincia
     S  Tipo de Vehículo
+    T  NPS (Promotor / Neutro / Detractor)
 
 Si en el futuro cambia el orden de columnas, ajustar el diccionario COL más abajo.
 """
@@ -47,6 +48,7 @@ COL = {
     "id_orden": 1,
     "cia": 2,
     "campana": 3,
+    "poliza": 7,
     "atencion": 8,
     "grua": 9,
     "calidad": 10,
@@ -58,6 +60,7 @@ COL = {
     "problema": 16,
     "provincia": 17,
     "tipo_vehiculo": 18,
+    "nps": 19,
 }
 
 MESES_ES = [
@@ -70,6 +73,8 @@ CATEGORIAS_COMENTARIO = {
     "Aspectos de Mejora": "Aspectos de mejora",
     "Comentario Mixto": "Comentarios mixtos",
 }
+
+CATEGORIAS_NPS = {"Promotor", "Neutro", "Detractor"}
 
 
 def clean(v):
@@ -106,10 +111,13 @@ def main():
         comentario_txt = clean(row[COL["comentario"]])
         respondio = clean(row[COL["respondio"]])
         tipo_comentario_raw = clean(row[COL["tipo_comentario"]])
+        nps_raw = clean(row[COL["nps"]])
+        poliza = row[COL["poliza"]]
 
         caso = {
             "mes": mes_label(row[COL["mes"]]),
             "id": row[COL["id_orden"]],
+            "poliza": poliza if poliza not in (None, "") else None,
             "atencion": atencion if isinstance(atencion, (int, float)) else None,
             "grua": grua if isinstance(grua, (int, float)) else None,
             "calidad": calidad if isinstance(calidad, (int, float)) else None,
@@ -119,6 +127,7 @@ def main():
             "provincia": clean(row[COL["provincia"]]) or None,
             "tipoVehiculo": clean(row[COL["tipo_vehiculo"]]) or None,
             "respondio": respondio,
+            "nps": nps_raw if nps_raw in CATEGORIAS_NPS else None,
         }
 
         # Comentario: solo lo incluimos si respondió, hay categoría reconocida

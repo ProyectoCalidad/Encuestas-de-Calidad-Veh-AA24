@@ -9,16 +9,16 @@
     --naranja:#FF8300;
     --naranja-suave:#FFE3C2;
     --tinta:#262626;
-    --bg:#F7F5F2;
+    --bg:#EBEDF0;
     --card:#FFFFFF;
-    --borde:#E7E3DC;
-    --texto:#2A2A2A;
-    --texto-sec:#6B6660;
+    --borde:#DFE2E6;
+    --texto:#24262B;
+    --texto-sec:#6B7076;
     --verde:#3C9A5F;
     --rojo:#D9503F;
     --amarillo:#E0A93B;
     --radio:14px;
-    --sombra:0 1px 2px rgba(38,38,38,.05), 0 6px 20px rgba(38,38,38,.06);
+    --sombra:0 1px 2px rgba(36,38,43,.05), 0 6px 20px rgba(36,38,43,.06);
     font-size:16px;
   }
   [data-theme="dark"]{
@@ -124,6 +124,23 @@
   .rank-row .pct{text-align:right;font-weight:700;}
   .rank-empty{color:var(--texto-sec);font-size:.85rem;font-style:italic;}
 
+  .nps-card{
+    background:var(--card);border:1px solid var(--borde);border-radius:var(--radio);
+    padding:20px 22px;box-shadow:var(--sombra);
+  }
+  .nps-stack{
+    display:flex;width:100%;height:16px;border-radius:8px;overflow:hidden;
+    background:var(--bg);margin:14px 0 18px;
+  }
+  .nps-stack span{height:100%;}
+  .nps-legend{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .nps-item{display:flex;flex-direction:column;gap:2px;}
+  .nps-item .top{display:flex;align-items:center;gap:8px;}
+  .nps-item .dot{width:10px;height:10px;border-radius:50%;}
+  .nps-item .nombre{font-size:.82rem;color:var(--texto-sec);font-weight:600;}
+  .nps-item .valor{font-size:1.6rem;font-weight:800;}
+  .nps-item .n{font-size:.75rem;color:var(--texto-sec);}
+
   .acordeon{display:flex;flex-direction:column;gap:10px;}
   .acc-item{
     background:var(--card);border:1px solid var(--borde);border-radius:12px;
@@ -147,6 +164,10 @@
   .comentario{
     background:var(--bg);border-radius:9px;padding:11px 13px;font-size:.86rem;
     line-height:1.45;color:var(--texto);border:1px solid var(--borde);
+  }
+  .comentario .poliza{
+    display:block;font-size:.72rem;font-weight:700;color:var(--texto-sec);
+    text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px;
   }
   .sin-comentarios{color:var(--texto-sec);font-style:italic;font-size:.85rem;padding:6px 4px 2px;}
 
@@ -202,6 +223,9 @@
   <h2 class="section-title">Indicadores clave</h2>
   <div class="kpi-grid" id="kpiGrid"></div>
 
+  <h2 class="section-title">Recomendación de los clientes</h2>
+  <div class="nps-card" id="npsCard"></div>
+
   <h2 class="section-title">Detalle</h2>
   <div class="rank-grid" id="rankGrid"></div>
 
@@ -236,6 +260,11 @@ const CATEGORIAS_COMENTARIO = [
   { key:"Comentarios positivos", dot:"pos" },
   { key:"Comentarios mixtos",    dot:"mix" },
   { key:"Aspectos de mejora",    dot:"mej" },
+];
+const NPS_CATS = [
+  { key:"Promotor",   label:"Promotores",  color:"var(--verde)" },
+  { key:"Neutro",     label:"Neutros",     color:"var(--amarillo)" },
+  { key:"Detractor",  label:"Detractores", color:"var(--rojo)" },
 ];
 
 let DATA = { casos: [] };
@@ -286,8 +315,35 @@ function render(){
   const casos = casosFiltrados();
   document.getElementById("conteoCasos").textContent = casos.length;
   renderKpis(casos);
+  renderNps(casos);
   renderRankings(casos);
   renderComentarios(casos);
+}
+
+function renderNps(casos){
+  const cont = document.getElementById("npsCard");
+  const conNps = casos.filter(c=>c.nps);
+  const total = conNps.length;
+  const counts = {};
+  NPS_CATS.forEach(c=>counts[c.key] = conNps.filter(x=>x.nps===c.key).length);
+
+  let stackHtml = "";
+  let legendHtml = "";
+  NPS_CATS.forEach(c=>{
+    const n = counts[c.key];
+    const pct = total ? Math.round((n/total)*100) : 0;
+    stackHtml += `<span style="width:${pct}%;background:${c.color}"></span>`;
+    legendHtml += `
+      <div class="nps-item">
+        <div class="top"><span class="dot" style="background:${c.color}"></span><span class="nombre">${c.label}</span></div>
+        <span class="valor">${pct}%</span>
+        <span class="n">${n} de ${total}</span>
+      </div>`;
+  });
+
+  cont.innerHTML = total
+    ? `<div class="nps-stack">${stackHtml}</div><div class="nps-legend">${legendHtml}</div>`
+    : `<div class="rank-empty">Sin datos de recomendación para el filtro seleccionado.</div>`;
 }
 
 function renderKpis(casos){
@@ -373,7 +429,7 @@ function renderComentarios(casos){
     if(!items.length){
       cuerpo = `<div class="sin-comentarios">No hay comentarios en esta categoría para el filtro seleccionado.</div>`;
     } else {
-      cuerpo = items.map(c=>`<div class="comentario">${escapeHtml(c.comentario)}</div>`).join("");
+      cuerpo = items.map(c=>`<div class="comentario">${c.poliza ? `<span class="poliza">Póliza ${c.poliza}</span>` : ""}${escapeHtml(c.comentario)}</div>`).join("");
     }
     div.innerHTML = `
       <div class="acc-head">
