@@ -123,6 +123,9 @@
   .rank-fill{height:100%;background:var(--naranja);border-radius:6px;}
   .rank-row .pct{text-align:right;font-weight:700;}
   .rank-empty{color:var(--texto-sec);font-size:.85rem;font-style:italic;}
+  .rank-full{margin-top:16px;}
+  .rank-full .rank-card{padding:22px 26px 24px;}
+  .rank-full .rank-row{grid-template-columns:1fr 60px;font-size:.86rem;}
 
   .nps-card{
     background:var(--card);border:1px solid var(--borde);border-radius:var(--radio);
@@ -228,6 +231,7 @@
 
   <h2 class="section-title">Detalle</h2>
   <div class="rank-grid" id="rankGrid"></div>
+  <div class="rank-full" id="rankFull"></div>
 
   <h2 class="section-title">Comentarios de clientes</h2>
   <p style="color:var(--texto-sec);font-size:.85rem;margin-top:-8px;">Agrupados por categoría — hacé clic para expandir</p>
@@ -378,41 +382,52 @@ function renderKpis(casos){
   });
 }
 
+function construirTarjetaRanking(r, casos){
+  const vals = casos.map(c=>c[r.key]).filter(Boolean);
+  const total = vals.length;
+  const counts = {};
+  vals.forEach(v=>counts[v]=(counts[v]||0)+1);
+  let entries = Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  const MAX_ITEMS = 8;
+  if(entries.length > MAX_ITEMS){
+    const top = entries.slice(0, MAX_ITEMS);
+    const resto = entries.slice(MAX_ITEMS);
+    const sumaResto = resto.reduce((acc,[,n])=>acc+n, 0);
+    entries = [...top, ["Otros", sumaResto]];
+  }
+  const card = document.createElement("div");
+  card.className = "rank-card";
+  let rows = "";
+  if(!entries.length){
+    rows = `<div class="rank-empty">Sin datos para el filtro seleccionado.</div>`;
+  } else {
+    entries.forEach(([name,n])=>{
+      const pct = Math.round((n/total)*100);
+      rows += `
+        <div class="rank-row">
+          <span class="name">${name}<span class="n">(${n})</span></span>
+          <span class="pct">${pct}%</span>
+        </div>
+        <div class="rank-row"><div class="rank-track" style="grid-column:1/3;"><div class="rank-fill" style="width:${pct}%"></div></div></div>
+      `;
+    });
+  }
+  card.innerHTML = `<h3>${r.titulo}</h3>${rows}`;
+  return card;
+}
+
 function renderRankings(casos){
-  const cont = document.getElementById("rankGrid");
-  cont.innerHTML = "";
+  const cuadricula = document.getElementById("rankGrid");
+  const ancho = document.getElementById("rankFull");
+  cuadricula.innerHTML = "";
+  ancho.innerHTML = "";
   RANKINGS.forEach(r=>{
-    const vals = casos.map(c=>c[r.key]).filter(Boolean);
-    const total = vals.length;
-    const counts = {};
-    vals.forEach(v=>counts[v]=(counts[v]||0)+1);
-    let entries = Object.entries(counts).sort((a,b)=>b[1]-a[1]);
-    const MAX_ITEMS = 8;
-    if(entries.length > MAX_ITEMS){
-      const top = entries.slice(0, MAX_ITEMS);
-      const resto = entries.slice(MAX_ITEMS);
-      const sumaResto = resto.reduce((acc,[,n])=>acc+n, 0);
-      entries = [...top, ["Otros", sumaResto]];
-    }
-    const card = document.createElement("div");
-    card.className = "rank-card";
-    let rows = "";
-    if(!entries.length){
-      rows = `<div class="rank-empty">Sin datos para el filtro seleccionado.</div>`;
+    const card = construirTarjetaRanking(r, casos);
+    if(r.key === "problema"){
+      ancho.appendChild(card);
     } else {
-      entries.forEach(([name,n])=>{
-        const pct = Math.round((n/total)*100);
-        rows += `
-          <div class="rank-row">
-            <span class="name">${name}<span class="n">(${n})</span></span>
-            <span class="pct">${pct}%</span>
-          </div>
-          <div class="rank-row"><div class="rank-track" style="grid-column:1/3;"><div class="rank-fill" style="width:${pct}%"></div></div></div>
-        `;
-      });
+      cuadricula.appendChild(card);
     }
-    card.innerHTML = `<h3>${r.titulo}</h3>${rows}`;
-    cont.appendChild(card);
   });
 }
 
@@ -459,7 +474,7 @@ function aplicarTema(t){
   document.documentElement.setAttribute("data-theme", t);
   toggleBtn.textContent = t==="dark" ? "☀️" : "🌙";
 }
-aplicarTema("light");
+aplicarTema("dark");
 toggleBtn.addEventListener("click", ()=>{
   const actual = document.documentElement.getAttribute("data-theme")==="dark" ? "light" : "dark";
   aplicarTema(actual);
