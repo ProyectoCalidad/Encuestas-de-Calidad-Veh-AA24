@@ -16,7 +16,7 @@ Columnas esperadas en la hoja "Reporte Metricas Encuestas" (o la primera hoja):
     E  FechaDeEncuesta
     F  TipoDePoliza
     G  FechaDeServicioPrestado
-    H  NroPoliza
+    H  NroPoliza (mostrado en el panel como "Certificado")
     I  Pregunta: Atención (1-5)
     J  Pregunta: Servicio de la grúa (1-5)
     K  Pregunta: Calidad general (1-5)
@@ -48,7 +48,7 @@ COL = {
     "id_orden": 1,
     "cia": 2,
     "campana": 3,
-    "poliza": 7,
+    "certificado": 7,
     "atencion": 8,
     "grua": 9,
     "calidad": 10,
@@ -112,12 +112,12 @@ def main():
         respondio = clean(row[COL["respondio"]])
         tipo_comentario_raw = clean(row[COL["tipo_comentario"]])
         nps_raw = clean(row[COL["nps"]])
-        poliza = row[COL["poliza"]]
+        certificado = row[COL["certificado"]]
 
         caso = {
             "mes": mes_label(row[COL["mes"]]),
             "id": row[COL["id_orden"]],
-            "poliza": poliza if poliza not in (None, "") else None,
+            "certificado": certificado if certificado not in (None, "") else None,
             "atencion": atencion if isinstance(atencion, (int, float)) else None,
             "grua": grua if isinstance(grua, (int, float)) else None,
             "calidad": calidad if isinstance(calidad, (int, float)) else None,

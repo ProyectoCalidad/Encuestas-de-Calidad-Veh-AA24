@@ -1,11 +1,11 @@
 {
-  "actualizado": "2026-08-25",
+  "actualizado": "2026-08-26",
   "cliente": "Auxilio24",
   "casos": [
     {
       "mes": "Julio 2026",
       "id": 4275831,
-      "poliza": 78146325,
+      "certificado": 78146325,
       "atencion": 4,
       "grua": 5,
       "calidad": 5,
@@ -20,7 +20,7 @@
     {
       "mes": "Julio 2026",
       "id": 4276033,
-      "poliza": 59281746,
+      "certificado": 59281746,
       "atencion": null,
       "grua": null,
       "calidad": null,
@@ -35,7 +35,7 @@
     {
       "mes": "Julio 2026",
       "id": 4277091,
-      "poliza": 83420519,
+      "certificado": 83420519,
       "atencion": null,
       "grua": null,
       "calidad": null,
@@ -50,7 +50,7 @@
     {
       "mes": "Julio 2026",
       "id": 4275887,
-      "poliza": 64739182,
+      "certificado": 64739182,
       "atencion": null,
       "grua": null,
       "calidad": null,
@@ -65,7 +65,7 @@
     {
       "mes": "Julio 2026",
       "id": 4276987,
-      "poliza": 91572834,
+      "certificado": 91572834,
       "atencion": null,
       "grua": null,
       "calidad": null,
@@ -80,7 +80,7 @@
     {
       "mes": "Julio 2026",
       "id": 4275481,
-      "poliza": 43816957,
+      "certificado": 43816957,
       "atencion": 4,
       "grua": 5,
       "calidad": 5,
@@ -95,7 +95,7 @@
     {
       "mes": "Julio 2026",
       "id": 4276021,
-      "poliza": 72650481,
+      "certificado": 72650481,
       "atencion": 3,
       "grua": 3,
       "calidad": 3,
@@ -110,7 +110,7 @@
     {
       "mes": "Julio 2026",
       "id": 4273991,
-      "poliza": 36987214,
+      "certificado": 36987214,
       "atencion": 5,
       "grua": 5,
       "calidad": 4,
@@ -127,7 +127,7 @@
     {
       "mes": "Julio 2026",
       "id": 4277155,
-      "poliza": 85214693,
+      "certificado": 85214693,
       "atencion": null,
       "grua": null,
       "calidad": null,
@@ -142,7 +142,7 @@
     {
       "mes": "Julio 2026",
       "id": 4276039,
-      "poliza": 51493827,
+      "certificado": 51493827,
       "atencion": null,
       "grua": null,
       "calidad": null,
@@ -157,7 +157,7 @@
     {
       "mes": "Julio 2026",
       "id": 4276779,
-      "poliza": 69328145,
+      "certificado": 69328145,
       "atencion": 4,
       "grua": 5,
       "calidad": 3,
@@ -172,7 +172,7 @@
     {
       "mes": "Julio 2026",
       "id": 4210572,
-      "poliza": 24781536,
+      "certificado": 24781536,
       "atencion": 5,
       "grua": 5,
       "calidad": 4,
@@ -189,7 +189,7 @@
     {
       "mes": "Julio 2026",
       "id": 4274979,
-      "poliza": 96835412,
+      "certificado": 96835412,
       "atencion": 5,
       "grua": 5,
       "calidad": 4,
@@ -206,7 +206,7 @@
     {
       "mes": "Julio 2026",
       "id": 4275091,
-      "poliza": 37592684,
+      "certificado": 37592684,
       "atencion": 4,
       "grua": 5,
       "calidad": 5,
@@ -221,7 +221,7 @@
     {
       "mes": "Julio 2026",
       "id": 4276999,
-      "poliza": 81947356,
+      "certificado": 81947356,
       "atencion": null,
       "grua": null,
       "calidad": null,
@@ -236,7 +236,7 @@
     {
       "mes": "Julio 2026",
       "id": 4276597,
-      "poliza": 45673291,
+      "certificado": 45673291,
       "atencion": 5,
       "grua": 5,
       "calidad": 4,
@@ -253,7 +253,7 @@
     {
       "mes": "Julio 2026",
       "id": 4276877,
-      "poliza": 73294815,
+      "certificado": 73294815,
       "atencion": null,
       "grua": null,
       "calidad": null,
@@ -268,7 +268,7 @@
     {
       "mes": "Julio 2026",
       "id": 4275741,
-      "poliza": 58126473,
+      "certificado": 58126473,
       "atencion": 4,
       "grua": 4,
       "calidad": 4,
@@ -283,7 +283,7 @@
     {
       "mes": "Julio 2026",
       "id": 4276761,
-      "poliza": 92461738,
+      "certificado": 92461738,
       "atencion": null,
       "grua": null,
       "calidad": null,
@@ -298,7 +298,7 @@
     {
       "mes": "Julio 2026",
       "id": 4276141,
-      "poliza": 31857942,
+      "certificado": 31857942,
       "atencion": 3,
       "grua": 3,
       "calidad": 3,
@@ -313,7 +313,7 @@
     {
       "mes": "Julio 2026",
       "id": 4275953,
-      "poliza": 86529317,
+      "certificado": 86529317,
       "atencion": 4,
       "grua": 4,
       "calidad": 4,
@@ -328,7 +328,7 @@
     {
       "mes": "Julio 2026",
       "id": 4276895,
-      "poliza": 49371628,
+      "certificado": 49371628,
       "atencion": null,
       "grua": null,
       "calidad": null,
@@ -343,7 +343,7 @@
     {
       "mes": "Julio 2026",
       "id": 4276887,
-      "poliza": 65782493,
+      "certificado": 65782493,
       "atencion": null,
       "grua": null,
       "calidad": null,
@@ -358,7 +358,7 @@
     {
       "mes": "Julio 2026",
       "id": 4276691,
-      "poliza": 28643175,
+      "certificado": 28643175,
       "atencion": null,
       "grua": null,
       "calidad": null,
@@ -373,7 +373,7 @@
     {
       "mes": "Julio 2026",
       "id": 4275949,
-      "poliza": 74198526,
+      "certificado": 74198526,
       "atencion": 3,
       "grua": 3,
       "calidad": 3,
@@ -388,7 +388,7 @@
     {
       "mes": "Julio 2026",
       "id": 4276105,
-      "poliza": 53967218,
+      "certificado": 53967218,
       "atencion": 3,
       "grua": 3,
       "calidad": 3,
@@ -403,7 +403,7 @@
     {
       "mes": "Julio 2026",
       "id": 4276953,
-      "poliza": 97812463,
+      "certificado": 97812463,
       "atencion": null,
       "grua": null,
       "calidad": null,
@@ -418,7 +418,7 @@
     {
       "mes": "Julio 2026",
       "id": 4276281,
-      "poliza": 41285739,
+      "certificado": 41285739,
       "atencion": 3,
       "grua": 3,
       "calidad": 3,
@@ -433,7 +433,7 @@
     {
       "mes": "Julio 2026",
       "id": 4275989,
-      "poliza": 62374981,
+      "certificado": 62374981,
       "atencion": 3,
       "grua": 3,
       "calidad": 3,
@@ -448,7 +448,7 @@
     {
       "mes": "Julio 2026",
       "id": 4276075,
-      "poliza": 85731624,
+      "certificado": 85731624,
       "atencion": 3,
       "grua": 3,
       "calidad": 3,
@@ -463,7 +463,7 @@
     {
       "mes": "Julio 2026",
       "id": 4275405,
-      "poliza": 19468357,
+      "certificado": 19468357,
       "atencion": 4,
       "grua": 5,
       "calidad": 5,
@@ -478,7 +478,7 @@
     {
       "mes": "Julio 2026",
       "id": 4275929,
-      "poliza": 76823549,
+      "certificado": 76823549,
       "atencion": 3,
       "grua": 3,
       "calidad": 3,
@@ -493,7 +493,7 @@
     {
       "mes": "Julio 2026",
       "id": 4275907,
-      "poliza": 34597186,
+      "certificado": 34597186,
       "atencion": null,
       "grua": null,
       "calidad": null,
@@ -508,7 +508,7 @@
     {
       "mes": "Julio 2026",
       "id": 4276519,
-      "poliza": 89154273,
+      "certificado": 89154273,
       "atencion": 5,
       "grua": 5,
       "calidad": 4,
@@ -525,7 +525,7 @@
     {
       "mes": "Julio 2026",
       "id": 4276009,
-      "poliza": 52641897,
+      "certificado": 52641897,
       "atencion": 3,
       "grua": 3,
       "calidad": 3,
@@ -540,7 +540,7 @@
     {
       "mes": "Julio 2026",
       "id": 4276615,
-      "poliza": 67913542,
+      "certificado": 67913542,
       "atencion": 5,
       "grua": 5,
       "calidad": 4,
@@ -557,7 +557,7 @@
     {
       "mes": "Julio 2026",
       "id": 4276425,
-      "poliza": 23876491,
+      "certificado": 23876491,
       "atencion": 5,
       "grua": 5,
       "calidad": 4,
@@ -574,7 +574,7 @@
     {
       "mes": "Julio 2026",
       "id": 4277041,
-      "poliza": 94358216,
+      "certificado": 94358216,
       "atencion": null,
       "grua": null,
       "calidad": null,
@@ -589,7 +589,7 @@
     {
       "mes": "Julio 2026",
       "id": 4275879,
-      "poliza": 45712968,
+      "certificado": 45712968,
       "atencion": null,
       "grua": null,
       "calidad": null,
@@ -604,7 +604,7 @@
     {
       "mes": "Julio 2026",
       "id": 4275709,
-      "poliza": 71489635,
+      "certificado": 71489635,
       "atencion": 4,
       "grua": 5,
       "calidad": 5,

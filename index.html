@@ -91,6 +91,21 @@
   }
   [data-theme="dark"] .conteo{color:var(--naranja);}
 
+  .stats-row{display:flex;gap:32px;margin:22px 4px 20px;flex-wrap:wrap;}
+  .stat-item{display:flex;align-items:baseline;gap:8px;}
+  .stat-item .num{font-size:1.7rem;font-weight:800;color:var(--texto);}
+  .stat-item .lbl{font-size:.76rem;text-transform:uppercase;letter-spacing:.05em;color:var(--texto-sec);font-weight:700;}
+
+  .tabs{display:flex;gap:28px;border-bottom:1px solid var(--borde);margin:0 4px 26px;}
+  .tab-btn{
+    background:none;border:none;cursor:pointer;padding:0 2px 12px;
+    font-size:.95rem;font-weight:700;color:var(--texto-sec);
+    border-bottom:2px solid transparent;margin-bottom:-1px;
+  }
+  .tab-btn.activa{color:var(--naranja);border-bottom-color:var(--naranja);}
+  .tab-panel{display:none;}
+  .tab-panel.activa{display:block;}
+
   h2.section-title{
     font-size:1rem;text-transform:uppercase;letter-spacing:.06em;
     color:var(--texto-sec);margin:34px 0 14px;font-weight:800;
@@ -170,11 +185,18 @@
     background:var(--bg);border-radius:9px;padding:11px 13px;font-size:.86rem;
     line-height:1.45;color:var(--texto);border:1px solid var(--borde);
   }
-  .comentario .poliza{
+  .comentario .certificado{
     display:block;font-size:.72rem;font-weight:700;color:var(--texto-sec);
     text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px;
   }
   .sin-comentarios{color:var(--texto-sec);font-style:italic;font-size:.85rem;padding:6px 4px 2px;}
+
+  .acc-item.mes-item > .acc-head{padding:16px 18px;}
+  .acc-item.mes-item > .acc-head .titulo{font-size:1rem;}
+  .acc-item.mes-item .acc-body-inner{padding:4px 14px 16px;display:flex;flex-direction:column;gap:10px;}
+  .acc-item.cat-item{border-radius:10px;box-shadow:none;}
+  .acc-item.cat-item > .acc-head{padding:11px 14px;}
+  .acc-item.cat-item > .acc-head .titulo{font-size:.85rem;}
 
   footer{margin-top:44px;text-align:center;color:var(--texto-sec);font-size:.78rem;}
 
@@ -225,19 +247,33 @@
     </div>
   </div>
 
-  <h2 class="section-title">Indicadores clave</h2>
-  <div class="kpi-grid" id="kpiGrid"></div>
+  <div class="stats-row">
+    <div class="stat-item"><span class="num" id="statCasosTotales">0</span><span class="lbl">Casos totales</span></div>
+    <div class="stat-item"><span class="num" id="statEncuestas">0</span><span class="lbl">Encuestas realizadas</span></div>
+  </div>
 
-  <h2 class="section-title">NPS</h2>
-  <div class="nps-card" id="npsCard"></div>
+  <div class="tabs">
+    <button class="tab-btn activa" data-tab="indicadores">Indicadores</button>
+    <button class="tab-btn" data-tab="comentarios">Comentarios</button>
+  </div>
 
-  <h2 class="section-title">Detalle</h2>
-  <div class="rank-grid" id="rankGrid"></div>
-  <div class="rank-full" id="rankFull"></div>
+  <div class="tab-panel activa" id="panelIndicadores">
+    <h2 class="section-title">Indicadores clave</h2>
+    <div class="kpi-grid" id="kpiGrid"></div>
 
-  <h2 class="section-title">Comentarios de clientes</h2>
-  <p style="color:var(--texto-sec);font-size:.85rem;margin-top:-8px;">Agrupados por categoría — hacé clic para expandir</p>
-  <div class="acordeon" id="acordeon"></div>
+    <h2 class="section-title">Resultado de Satisfacción General</h2>
+    <div class="nps-card" id="npsCard"></div>
+
+    <h2 class="section-title">Detalle</h2>
+    <div class="rank-grid" id="rankGrid"></div>
+    <div class="rank-full" id="rankFull"></div>
+  </div>
+
+  <div class="tab-panel" id="panelComentarios">
+    <h2 class="section-title">Comentarios de clientes</h2>
+    <p style="color:var(--texto-sec);font-size:.85rem;margin-top:-8px;">Agrupados por mes y, adentro, por tipo de comentario — hacé clic para expandir</p>
+    <div class="acordeon" id="acordeonMeses"></div>
+  </div>
 
   <footer>Panel generado a partir de la base de datos de encuestas de satisfacción de Auxilio24.</footer>
 </div>
@@ -320,6 +356,11 @@ function casosFiltrados(){
 function render(){
   const casos = casosFiltrados();
   document.getElementById("conteoCasos").textContent = casos.length;
+  document.getElementById("statCasosTotales").textContent = casos.length;
+  const encuestasRealizadas = casos.filter(c =>
+    [c.atencion, c.grua, c.calidad].some(v => typeof v === "number")
+  ).length;
+  document.getElementById("statEncuestas").textContent = encuestasRealizadas;
   renderKpis(casos);
   renderNps(casos);
   renderRankings(casos);
@@ -433,36 +474,75 @@ function renderRankings(casos){
   });
 }
 
-let estadoAcordeon = {};
+let estadoAcordeonMes = {};
+let estadoAcordeonCat = {};
 
 function renderComentarios(casos){
-  const cont = document.getElementById("acordeon");
+  const cont = document.getElementById("acordeonMeses");
   cont.innerHTML = "";
-  CATEGORIAS_COMENTARIO.forEach(cat=>{
-    const items = casos.filter(c=>c.tipoComentario===cat.key && c.comentario);
-    const div = document.createElement("div");
-    div.className = "acc-item" + (estadoAcordeon[cat.key] ? " open" : "");
-    let cuerpo = "";
-    if(!items.length){
-      cuerpo = `<div class="sin-comentarios">No hay comentarios en esta categoría para el filtro seleccionado.</div>`;
-    } else {
-      cuerpo = items.map(c=>`<div class="comentario">${c.poliza ? `<span class="poliza">Póliza ${c.poliza}</span>` : ""}${escapeHtml(c.comentario)}</div>`).join("");
-    }
-    div.innerHTML = `
+
+  const conComentario = casos.filter(c => c.comentario && c.tipoComentario);
+  const meses = [...new Set(conComentario.map(c => c.mes))];
+  // Orden: el mismo orden en que aparecen los meses en el select de filtros
+  const ordenMeses = [...new Set(DATA.casos.map(c => c.mes))].sort();
+  meses.sort((a,b) => ordenMeses.indexOf(a) - ordenMeses.indexOf(b));
+
+  if(!meses.length){
+    cont.innerHTML = `<div class="sin-comentarios">No hay comentarios para el filtro seleccionado.</div>`;
+    return;
+  }
+
+  meses.forEach(mes=>{
+    const casosMes = conComentario.filter(c => c.mes === mes);
+    const mesDiv = document.createElement("div");
+    mesDiv.className = "acc-item mes-item" + (estadoAcordeonMes[mes] ? " open" : "");
+
+    const subAcordeon = document.createElement("div");
+    subAcordeon.className = "acordeon";
+    CATEGORIAS_COMENTARIO.forEach(cat=>{
+      const items = casosMes.filter(c => c.tipoComentario === cat.key);
+      const catKey = mes + "|" + cat.key;
+      const catDiv = document.createElement("div");
+      catDiv.className = "acc-item cat-item" + (estadoAcordeonCat[catKey] ? " open" : "");
+      let cuerpo = "";
+      if(!items.length){
+        cuerpo = `<div class="sin-comentarios">Sin comentarios en esta categoría.</div>`;
+      } else {
+        cuerpo = items.map(c=>`<div class="comentario">${c.certificado ? `<span class="certificado">Certificado ${c.certificado}</span>` : ""}${escapeHtml(c.comentario)}</div>`).join("");
+      }
+      catDiv.innerHTML = `
+        <div class="acc-head">
+          <span class="titulo"><span class="dot ${cat.dot}"></span>${cat.key}</span>
+          <span style="display:flex;align-items:center;gap:10px;">
+            <span class="count">${items.length}</span>
+            <span class="acc-chevron">▾</span>
+          </span>
+        </div>
+        <div class="acc-body"><div class="acc-body-inner">${cuerpo}</div></div>
+      `;
+      catDiv.querySelector(".acc-head").addEventListener("click", ()=>{
+        catDiv.classList.toggle("open");
+        estadoAcordeonCat[catKey] = catDiv.classList.contains("open");
+      });
+      subAcordeon.appendChild(catDiv);
+    });
+
+    mesDiv.innerHTML = `
       <div class="acc-head">
-        <span class="titulo"><span class="dot ${cat.dot}"></span>${cat.key}</span>
+        <span class="titulo">${mes}</span>
         <span style="display:flex;align-items:center;gap:10px;">
-          <span class="count">${items.length}</span>
+          <span class="count">${casosMes.length}</span>
           <span class="acc-chevron">▾</span>
         </span>
       </div>
-      <div class="acc-body"><div class="acc-body-inner">${cuerpo}</div></div>
+      <div class="acc-body"><div class="acc-body-inner"></div></div>
     `;
-    div.querySelector(".acc-head").addEventListener("click", ()=>{
-      div.classList.toggle("open");
-      estadoAcordeon[cat.key] = div.classList.contains("open");
+    mesDiv.querySelector(".acc-body-inner").appendChild(subAcordeon);
+    mesDiv.querySelector(".acc-head").addEventListener("click", ()=>{
+      mesDiv.classList.toggle("open");
+      estadoAcordeonMes[mes] = mesDiv.classList.contains("open");
     });
-    cont.appendChild(div);
+    cont.appendChild(mesDiv);
   });
 }
 
@@ -482,6 +562,16 @@ aplicarTema("dark");
 toggleBtn.addEventListener("click", ()=>{
   const actual = document.documentElement.getAttribute("data-theme")==="dark" ? "light" : "dark";
   aplicarTema(actual);
+});
+
+// Tabs Indicadores / Comentarios
+document.querySelectorAll(".tab-btn").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("activa"));
+    document.querySelectorAll(".tab-panel").forEach(p=>p.classList.remove("activa"));
+    btn.classList.add("activa");
+    document.getElementById(btn.dataset.tab === "indicadores" ? "panelIndicadores" : "panelComentarios").classList.add("activa");
+  });
 });
 
 cargar();
