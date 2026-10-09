@@ -177,13 +177,13 @@
   .dot.mej{background:var(--rojo);}
   .acc-head .count{color:var(--texto-sec);font-size:.8rem;font-weight:600;}
   .acc-chevron{transition:transform .2s ease;color:var(--texto-sec);}
-  .acc-item.open .acc-chevron{transform:rotate(180deg);}
+  .acc-item.open > .acc-head .acc-chevron{transform:rotate(180deg);}
   .acc-body{max-height:0;overflow:hidden;transition:max-height .28s ease;}
-  .acc-item.open .acc-body{max-height:2000px;}
+  .acc-item.open > .acc-body{max-height:none;}
   .acc-body-inner{padding:0 18px 16px;display:flex;flex-direction:column;gap:10px;}
   .comentario{
     background:var(--bg);border-radius:9px;padding:11px 13px;font-size:.86rem;
-    line-height:1.45;color:var(--texto);border:1px solid var(--borde);
+    line-height:1.45;color:var(--texto);border:1px solid var(--borde);white-space:pre-line;
   }
   .comentario .certificado{
     display:block;font-size:.72rem;font-weight:700;color:var(--texto-sec);
@@ -319,8 +319,14 @@ async function cargar(){
   render();
 }
 
+// Encuesta realizada = completa o parcial (al menos una de las 3 preguntas respondida)
+function tieneEncuesta(c){
+  return [c.atencion, c.grua, c.calidad].some(v => typeof v === "number");
+}
+
+// Los filtros solo ofrecen valores que tienen encuestas realizadas
 function valoresUnicos(campo){
-  return [...new Set(DATA.casos.map(c=>c[campo]).filter(Boolean))].sort();
+  return [...new Set(DATA.casos.filter(tieneEncuesta).map(c=>c[campo]).filter(Boolean))].sort();
 }
 
 function poblarFiltros(){
@@ -357,13 +363,11 @@ function render(){
   const casos = casosFiltrados();
   document.getElementById("conteoCasos").textContent = casos.length;
   document.getElementById("statCasosTotales").textContent = casos.length;
-  const encuestasRealizadas = casos.filter(c =>
-    [c.atencion, c.grua, c.calidad].some(v => typeof v === "number")
-  ).length;
-  document.getElementById("statEncuestas").textContent = encuestasRealizadas;
-  renderKpis(casos);
-  renderNps(casos);
-  renderRankings(casos);
+  const encuestas = casos.filter(tieneEncuesta);
+  document.getElementById("statEncuestas").textContent = encuestas.length;
+  renderKpis(encuestas);
+  renderNps(encuestas);
+  renderRankings(encuestas);
   renderComentarios(casos);
 }
 
@@ -446,12 +450,14 @@ function construirTarjetaRanking(r, casos){
   } else {
     entries.forEach(([name,n])=>{
       const pct = Math.round((n/total)*100);
+      const pctTxt = (pct === 0 && n > 0) ? "<1%" : pct + "%";
+      const ancho = (pct === 0 && n > 0) ? 1 : pct;
       rows += `
         <div class="rank-row">
           <span class="name">${name}<span class="n">(${n})</span></span>
-          <span class="pct">${pct}%</span>
+          <span class="pct">${pctTxt}</span>
         </div>
-        <div class="rank-row"><div class="rank-track" style="grid-column:1/3;"><div class="rank-fill" style="width:${pct}%"></div></div></div>
+        <div class="rank-row"><div class="rank-track" style="grid-column:1/3;"><div class="rank-fill" style="width:${ancho}%"></div></div></div>
       `;
     });
   }
