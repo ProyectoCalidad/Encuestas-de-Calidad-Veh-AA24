@@ -199,6 +199,7 @@
   .acc-item.cat-item > .acc-head .titulo{font-size:.85rem;}
 
   .aclaracion{font-size:.82rem;color:var(--texto-sec);margin:-8px 4px 4px;line-height:1.5;}
+  .sec-sub{font-size:.82rem;color:var(--texto-sec);margin:-6px 4px 14px;line-height:1.5;}
   .rank-nota{font-size:.74rem;color:var(--texto-sec);margin:-8px 0 12px;}
 
   .evol-card,.canal-card{
@@ -300,7 +301,8 @@
     <h2 class="section-title">Evolución mensual del Resultado de Satisfacción General</h2>
     <div class="evol-card" id="evolCard"></div>
 
-    <h2 class="section-title">Canal de contacto</h2>
+    <h2 class="section-title">Canal de ingreso del caso</h2>
+    <p class="sec-sub">Canal por el que el cliente solicitó la asistencia. Se calcula sobre las encuestas realizadas.</p>
     <div class="canal-card" id="canalCard"></div>
 
     <h2 class="section-title">Detalle</h2>
@@ -474,7 +476,7 @@ function renderEvolucion(){
   cont.innerHTML = `<div class="evol-chart">${cols}</div>${pie}`;
 }
 
-// ---------- Canal de contacto (sobre encuestas realizadas)
+// ---------- Canal de ingreso del caso (sobre encuestas realizadas)
 function renderCanal(casos){
   const cont = document.getElementById("canalCard");
   const conCanal = casos.filter(c=>c.canal);
@@ -511,8 +513,8 @@ function renderCanal(casos){
   });
 
   cont.innerHTML = `<div class="canal-grid">
-    <div><h3>Encuestas realizadas por canal</h3>${izq}</div>
-    <div><h3>Resultado de Satisfacción General por canal</h3>${der}</div>
+    <div><h3>Distribución por canal de ingreso</h3>${izq}</div>
+    <div><h3>Resultado de Satisfacción General por canal de ingreso</h3>${der}</div>
   </div>`;
 }
 
